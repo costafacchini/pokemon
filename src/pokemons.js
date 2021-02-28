@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import styles from './pokemons.module.css'
 
 const pokemonList = [
   {
@@ -294,24 +293,26 @@ function PokemonsIndex() {
         <div className='container'>
           <div className='row'>
             <div className='col-36'>
-              <div className={`card-columns ${styles.cardColumns}`} >
+              <div className={`row row-cols-1 row-cols-md-4`} >
                 {pokemons.map((pokemon) => (
                   <>
-                    <div className='card shadow-sm border-0 rounded'>
-                      <div className='card-body p-0'>
-                        <img className='card-img-top w-80 img-thumbnail' src={pokemon["ThumbnailImage"]} alt="" />
-                        <div className="p-4">
-                          <h5 className="mb-0">{pokemon["ThumbnailAltText"]}</h5>
-                          <p className="small text-muted">{pokemon["number"]}</p>
-                          <ul className="social mb-0 list-inline mt-3">
-                            {pokemon["abilities"].map((hability, index) => (
-                              <li className="list-inline-item m-0">
-                                <span key={index} className="badge badge-primary mr-1">
-                                {hability}
-                              </span>
-                              </li>
-                            ))}
-                          </ul>
+                    <div className="col mt-4">
+                      <div className='card shadow-sm border-0 rounded'>
+                        <div className='card-body p-0'>
+                          <img className='card-img-top w-80 img-thumbnail' src={pokemon["ThumbnailImage"]} alt="" />
+                          <div className="p-3">
+                            <h5 className="mb-0">{pokemon["ThumbnailAltText"]}</h5>
+                            <p className="small text-muted">{pokemon["number"]}</p>
+                            <ul className="social mb-0 list-inline mt-3">
+                              {pokemon["abilities"].map((hability, index) => (
+                                <li className="list-inline-item m-0">
+                                  <span key={index} className="badge badge-primary mr-1">
+                                  {hability}
+                                </span>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
                         </div>
                       </div>
                     </div>
