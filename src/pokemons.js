@@ -82,7 +82,17 @@ const pokemonList = [
 ]
 
 function PokemonsIndex() {
-  const [pokemons, setPokemons] = useState(pokemonList);
+  const [pokemons, setPokemons] = useState(pokemonList)
+  const [expression, setExpression] = useState('')
+
+  function changeExpression(e) {
+    setExpression(e.target.value)
+  }
+
+  function filterPokemons(expression) {
+    const pokemonsFiltered = pokemonList.filter((pokemon) => pokemon["ThumbnailAltText"].includes(expression) || pokemon["number"].includes(expression))
+    setPokemons(pokemonsFiltered)
+  }
 
   return (
     <>
@@ -98,12 +108,17 @@ function PokemonsIndex() {
               className='form-control'
               name='expression'
               type='text'
+              value={expression}
               placeholder='Busque por nome ou número'
+              onChange={changeExpression}
             />
             <div className='input-group-append'>
               <button
                 type='button'
                 className='btn btn-default'
+                onClick={() => {
+                  filterPokemons(expression)
+                }}
               >
                 Buscar
               </button>
