@@ -1,36 +1,66 @@
 import React, { useState, useEffect } from 'react'
 import Card from './components/Card'
+import request from '../../services/request'
 
-function PokemonsIndex({ pokemonList }) {
-  const [pokemons, setPokemons] = useState([])
+function PokemonsIndex() {
+  const [pokemons, setPokemons] = useState()
   const [expression, setExpression] = useState('')
 
-  useEffect(() => {
-    setPokemons(pokemonList.sort(compare))
-  }, [pokemonList])
-
   function compare(a, b) {
-    if (a["name"] < b["name"]){
+    if (a.name < b.name){
       return -1
     }
 
-    if (a["name"] > b["name"]){
+    if (a.name > b.name){
       return 1
     }
 
     return 0
   }
 
+  useEffect(() => {
+    async function getPokemons() {
+      try {
+        const pokemonsList = []
+
+        //Get first 40 pokemons
+        const pokemonsData = await request('https://pokeapi.co/api/v2/pokemon/?offset=0&limit=40')
+        const allPokemons = pokemonsData.results
+
+        const promises = allPokemons.map(async pokemon => {
+          const pokemonInfo = await request(pokemon.url)
+
+          pokemonsList.push({
+            abilities: pokemonInfo.abilities.map(hability => hability.ability.name),
+            number: pokemonInfo.order,
+            name: pokemonInfo.name,
+            image: `https://pokeres.bastionbot.org/images/pokemon/${pokemonInfo.id}.png`,
+            id: pokemonInfo.id
+          })
+        })
+
+        await Promise.all(promises)
+
+        return pokemonsList.sort(compare)
+      } catch (error) {
+        console.error('Error', error)
+      }
+    }
+    getPokemons().then(pokemons => {
+      setPokemons(pokemons)
+    })
+  }, [])
+
   function changeExpression(e) {
     setExpression(e.target.value)
   }
 
-  function contains(expression, substring) {
-    return expression.toUpperCase().includes(substring.toUpperCase())
+  function contains(attribute, substring) {
+    return attribute.toUpperCase().includes(substring.toUpperCase())
   }
 
   function filterPokemons(expression) {
-    const pokemonsFiltered = pokemonList.filter((pokemon) => contains(pokemon["name"], expression) || contains(pokemon["number"], expression))
+    const pokemonsFiltered = pokemons.filter(pokemon => contains(pokemon.name, expression) || contains(pokemon.number.toString(), expression))
     setPokemons(pokemonsFiltered.sort(compare))
   }
 
@@ -67,9 +97,9 @@ function PokemonsIndex({ pokemonList }) {
           <div className='row'>
             <div className='col-36'>
               <div className={`row row-cols-1 row-cols-md-4`} >
-                {pokemons.map((pokemon) => (
+                {pokemons && pokemons.map((pokemon) => (
                   <Card key={pokemon["id"]}
-                    imgURL={pokemon["ThumbnailImage"]}
+                    imgURL={pokemon["image"]}
                     name={pokemon["name"]}
                     number={pokemon["number"]}
                     abilities={pokemon["abilities"]}
