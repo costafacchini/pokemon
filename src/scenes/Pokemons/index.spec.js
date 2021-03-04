@@ -1,65 +1,46 @@
 import React from 'react'
-import { render, screen, fireEvent } from "@testing-library/react"
+import { screen, fireEvent } from '@testing-library/react'
 import { act } from 'react-dom/test-utils'
 import fetchMock from 'fetch-mock'
 import PokemonsIndex from './index'
+import mountWithRedux, { createStore } from '../../../.jest/redux-testing'
 
 describe('<PokemonsIndex />', () => {
+  let store
+
   function mount() {
-    fetchMock.get('https://pokeapi.co/api/v2/pokemon/?offset=0&limit=40',
+    fetchMock.get('https://pokeapi.co/api/v2/pokemon/?offset=0&limit=1', { count: 543 })
+    fetchMock.get('https://pokeapi.co/api/v2/pokemon/?offset=0&limit=543',
       {
-        count: 1118,
-        next: 'https://pokeapi.co/api/v2/pokemon/?offset=40&limit=40',
-        previous: null,
+        count: 543,
         results: [
-          {
-            name: 'ivysaur',
-            url: 'https://pokeapi.co/api/v2/pokemon/2/'
-          },
-          {
-            name: 'bulbasaur',
-            url: 'https://pokeapi.co/api/v2/pokemon/1/'
-          }
+          { name: 'ivysaur', url: 'https://pokeapi.co/api/v2/pokemon/2/' },
+          { name: 'pikachu', url: 'https://pokeapi.co/api/v2/pokemon/3/' },
+          { name: 'bulbasaur', url: 'https://pokeapi.co/api/v2/pokemon/1/' }
         ]
       }
     )
+    fetchMock.get('https://pokeapi.co/api/v2/pokemon/1/', {
+      abilities: [ { ability: { name: 'synchronize' } }, { ability: { name: 'magic-guard' } } ],
+      order: 1,
+      name: 'bulbasaur',
+      id: 1
+    })
+    fetchMock.get('https://pokeapi.co/api/v2/pokemon/2/', {
+      abilities: [ { ability: { name: 'inner-focus' } }, { ability: { name: 'justified' } } ],
+      order: 2,
+      name: 'ivysaur',
+      id: 2
+    })
+    fetchMock.get('https://pokeapi.co/api/v2/pokemon/3/', {
+      abilities: [ { ability: { name: 'magic-guard' } }, { ability: { name: 'super-luck' } } ],
+      order: 3,
+      name: 'pikachu',
+      id: 3
+    })
 
-    fetchMock.get('https://pokeapi.co/api/v2/pokemon/2/',
-      {
-        abilities: [
-          {
-            ability: {
-              name: 'overgrow'
-            }
-          },
-          {
-            ability: {
-              name: 'chlorophyll'
-            }
-          }
-        ],
-        order: '002',
-        name: 'ivysaur',
-        id: 2
-      }
-    )
-
-    fetchMock.get('https://pokeapi.co/api/v2/pokemon/1/',
-      {
-        abilities: [
-          {
-            ability: {
-              name: 'overgrow'
-            }
-          }
-        ],
-        order: '001',
-        name: 'bulbasaur',
-        id: 1
-      }
-    )
-
-    render(<PokemonsIndex />)
+    store = createStore()
+    return mountWithRedux(store)(<PokemonsIndex />)
   }
 
   afterEach(() => {
@@ -79,15 +60,12 @@ describe('<PokemonsIndex />', () => {
     expect(screen.getByRole('button', { name: 'Buscar' })).toBeInTheDocument()
   })
 
-  it('shows the pokeomn cards ordered by name', async () => {
+  it('shows the pokeomn cards', async () => {
     await act(async () => {
       mount()
 
       await fetchMock.flush(true)
     })
-
-    expect(screen.getAllByRole('heading')[0]).toHaveTextContent('bulbasaur')
-    expect(screen.getAllByRole('heading')[1]).toHaveTextContent('ivysaur')
 
     expect(screen.getByText('bulbasaur')).toBeInTheDocument()
     expect(screen.getByText('ivysaur')).toBeInTheDocument()
@@ -107,6 +85,54 @@ describe('<PokemonsIndex />', () => {
 
       expect(screen.getByText('bulbasaur')).toBeInTheDocument()
       expect(screen.queryByText('ivysaur')).not.toBeInTheDocument()
+    })
+
+    it('hides the load more button', async () => {
+      await act(async () => {
+        mount()
+
+        await fetchMock.flush(true)
+      })
+
+      expect(screen.getByText('Carregar mais')).toBeInTheDocument()
+
+      const searchInput = screen.getByRole('textbox', { value: 'expression' })
+      fireEvent.change(searchInput, { target: { value: 'Bulb' } })
+
+      expect(screen.queryByText('Carregar mais')).not.toBeInTheDocument()
+    })
+  })
+
+  describe('about the load more button', () => {
+    it('shows the load more button', async () => {
+      await act(async () => {
+        mount()
+
+        await fetchMock.flush(true)
+      })
+
+      expect(screen.getByText('Carregar mais')).toBeInTheDocument()
+    })
+
+    describe('when the user clicks to load a new page of pokemons', () => {
+      beforeEach(async () => {
+        await act(async () => {
+          mount()
+
+          await fetchMock.flush(true)
+        })
+
+        screen.getByRole('button', { name: 'Carregar mais' }).click()
+      })
+
+      it('load a new page of pokemons', async () => {
+        //Preciso carregar a segunda página
+        expect(true).toEqual(false)
+      })
+
+      it('shows the load more button', () => {
+        expect(screen.getByText('Carregar mais')).toBeInTheDocument()
+      })
     })
   })
 })

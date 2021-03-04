@@ -1,6 +1,6 @@
 import './App.css'
-import PokemonsIndex from "./scenes/Pokemons"
-import React from "react"
+import PokemonsIndex from './scenes/Pokemons'
+import React from 'react'
 
 function App() {
   return (

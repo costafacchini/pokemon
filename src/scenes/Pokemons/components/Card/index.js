@@ -11,7 +11,7 @@ export default function Card({ name, number, abilities, imgURL }) {
             <h5 className="mb-0">{name}</h5>
             <p className="small text-muted">{number}</p>
             <ul className="social mb-0 list-inline mt-3">
-              {abilities.map((hability, index) => (
+              {abilities && abilities.map((hability, index) => (
                 <li key={name + index} className="list-inline-item m-0">
                   <Hability hability={hability} />
                 </li>
