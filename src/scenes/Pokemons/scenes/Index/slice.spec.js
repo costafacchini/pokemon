@@ -1,4 +1,4 @@
-import store from '../../app/store'
+import store from '../../../../app/store'
 import { reset, loadBasicList, addMore, filter, setExpression, setPage } from './slice'
 
 describe('slice', () => {

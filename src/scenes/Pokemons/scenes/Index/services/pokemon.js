@@ -1,4 +1,4 @@
-import request from '../../../services/request'
+import request from '../../../../../services/request'
 
 async function fetchBasicList() {
   try {
@@ -31,14 +31,22 @@ async function fetchPokemonsDetails(pokemonsOfPage) {
       if (!pokemon.hasOwnProperty('number')) {
         const pokemonInfo = await fetchPokemonInfo(pokemon.url)
 
-        pokemons.push({
-          abilities: pokemonInfo.abilities.map(hability => hability.ability.name),
-          number: pokemonInfo.order,
-          name: pokemonInfo.name,
-          image: `https://pokeres.bastionbot.org/images/pokemon/${pokemonInfo.id}.png`,
-          image_alt: `https://assets.pokemon.com/assets/cms2/img/pokedex/detail/${pokemonInfo.order}.png`,
-          id: pokemonInfo.id
-        })
+        if (pokemonInfo !== 'Not Found') {
+          pokemons.push({
+            abilities: pokemonInfo.abilities.map(hability => hability.ability.name),
+            types: pokemonInfo.types.map(type => type.type.name),
+            height: pokemonInfo.height,
+            weight: pokemonInfo.weight,
+            number: pokemonInfo.order,
+            name: pokemonInfo.name,
+            image: `https://pokeres.bastionbot.org/images/pokemon/${pokemonInfo.id}.png`,
+            id: pokemonInfo.id,
+            images: {
+              original: pokemonInfo.sprites.other["official-artwork"]["front_default"],
+              alternative: pokemonInfo.sprites.other["dream_world"]["front_default"]
+            }
+          })
+        }
       }
     })
 

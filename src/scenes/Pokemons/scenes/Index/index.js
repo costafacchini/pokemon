@@ -12,21 +12,25 @@ function PokemonsIndex() {
   const page = useSelector(state => state.pokemon.page)
 
   useEffect(() => {
-    fetchBasicList().then(pokemonList => {
-      dispatch(loadBasicList(pokemonList))
-    })
-  }, [dispatch])
+    if (basicList.length === 0) {
+      fetchBasicList().then(pokemonList => {
+        dispatch(loadBasicList(pokemonList))
+      })
+    }
+  }, [dispatch, basicList])
 
   useEffect(() => {
-    const cardsForPage = 40
-    const intervalStart = ((page - 1) * cardsForPage)
-    const intervalEnd = intervalStart + cardsForPage
+    if (basicList.length > 0) {
+      const cardsForPage = 40
+      const intervalStart = ((page - 1) * cardsForPage)
+      const intervalEnd = intervalStart + cardsForPage
 
-    const pokemonsOfPage = basicList.slice(intervalStart, intervalEnd)
+      const pokemonsOfPage = basicList.slice(intervalStart, intervalEnd)
 
-    fetchPokemonsDetails(pokemonsOfPage).then(pokemons => {
-      dispatch(addMore(pokemons))
-    })
+      fetchPokemonsDetails(pokemonsOfPage).then(pokemons => {
+        dispatch(addMore(pokemons))
+      })
+    }
   }, [dispatch, basicList, page])
 
   function changeExpression(e) {
@@ -65,14 +69,9 @@ function PokemonsIndex() {
         <div className='container'>
           <div className='row'>
             <div className='col-36'>
-              <div className={`row row-cols-1 row-cols-md-4`} >
+              <div className={'row row-cols-1 row-cols-md-4'} >
                 {pokemonsShowing && pokemonsShowing.map((pokemon) => (
-                  <Card key={pokemon["id"]}
-                    imgURL={pokemon["image"]}
-                    name={pokemon["name"]}
-                    number={pokemon["number"]}
-                    abilities={pokemon["abilities"]}
-                  />
+                  <Card key={pokemon.id} pokemon={pokemon} />
                 ))}
               </div>
             </div>

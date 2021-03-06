@@ -3,14 +3,14 @@ import { screen, fireEvent } from '@testing-library/react'
 import { act } from 'react-dom/test-utils'
 import fetchMock from 'fetch-mock'
 import PokemonsIndex from './index'
-import mountWithRedux, { createStore } from '../../../.jest/redux-testing'
+import mountWithRedux, { createStore } from '../../../../../.jest/redux-testing'
 
 describe('<PokemonsIndex />', () => {
   let store
 
   function mount() {
-    fetchMock.get('https://pokeapi.co/api/v2/pokemon/?offset=0&limit=1', { count: 543 })
-    fetchMock.get('https://pokeapi.co/api/v2/pokemon/?offset=0&limit=543',
+    fetchMock.get('https://pokeapi.co/api/v2/pokemon/?offset=0&limit=1', { count: 3 })
+    fetchMock.get('https://pokeapi.co/api/v2/pokemon/?offset=0&limit=3',
       {
         count: 543,
         results: [
@@ -22,21 +22,60 @@ describe('<PokemonsIndex />', () => {
     )
     fetchMock.get('https://pokeapi.co/api/v2/pokemon/1/', {
       abilities: [ { ability: { name: 'synchronize' } }, { ability: { name: 'magic-guard' } } ],
+      types: [ { type: { name: 'grass' } }, { type: { name: 'poison' } } ],
       order: 1,
       name: 'bulbasaur',
-      id: 1
+      id: 1,
+      height: 109,
+      weight: 10,
+      sprites: {
+        other: {
+          'official-artwork': {
+            'front_default': 'url_image_1'
+          },
+          "dream_world": {
+            "front_default": 'url_image_2'
+          }
+        }
+      }
     })
     fetchMock.get('https://pokeapi.co/api/v2/pokemon/2/', {
       abilities: [ { ability: { name: 'inner-focus' } }, { ability: { name: 'justified' } } ],
+      types: [ { type: { name: 'grass' } } ],
       order: 2,
       name: 'ivysaur',
-      id: 2
+      id: 2,
+      height: 28,
+      weight: 35,
+      sprites: {
+        other: {
+          'official-artwork': {
+            'front_default': 'url_image_1'
+          },
+          "dream_world": {
+            "front_default": 'url_image_2'
+          }
+        }
+      }
     })
     fetchMock.get('https://pokeapi.co/api/v2/pokemon/3/', {
       abilities: [ { ability: { name: 'magic-guard' } }, { ability: { name: 'super-luck' } } ],
+      types: [ { type: { name: 'poison' } } ],
       order: 3,
       name: 'pikachu',
-      id: 3
+      id: 3,
+      height: 79,
+      weight: 90,
+      sprites: {
+        other: {
+          'official-artwork': {
+            'front_default': 'url_image_1'
+          },
+          "dream_world": {
+            "front_default": 'url_image_2'
+          }
+        }
+      }
     })
 
     store = createStore()
