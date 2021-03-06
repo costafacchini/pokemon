@@ -1,37 +1,30 @@
 import React, { useEffect } from 'react'
 import Card from './components/Card'
 import { useSelector, useDispatch } from 'react-redux'
-import { fetchBasicList, fetchPokemonsDetails } from './services/pokemon'
-import { loadBasicList, addMore, filter, setExpression, setPage } from './slice'
+import { fetchPokemonsDetails } from '../../services/pokemon'
+import { addMore, filter, setExpression, setPage } from './slice'
 
 function PokemonsIndex() {
   const dispatch = useDispatch()
   const basicList = useSelector(state => state.pokemon.basicList)
-  const pokemonsShowing = useSelector(state => state.pokemon.pokemonsShowing)
-  const expression = useSelector(state => state.pokemon.expression)
-  const page = useSelector(state => state.pokemon.page)
+  const pokemonsShowing = useSelector(state => state.pokemonIndex.pokemonsShowing)
+  const expression = useSelector(state => state.pokemonIndex.expression)
+  const page = useSelector(state => state.pokemonIndex.page)
+
+  const cardsForPage = 40
 
   useEffect(() => {
-    if (basicList.length === 0) {
-      fetchBasicList().then(pokemonList => {
-        dispatch(loadBasicList(pokemonList))
-      })
-    }
-  }, [dispatch, basicList])
+    const intervalEnd = page * cardsForPage
+    const intervalStart = intervalEnd - cardsForPage
 
-  useEffect(() => {
-    if (basicList.length > 0) {
-      const cardsForPage = 40
-      const intervalStart = ((page - 1) * cardsForPage)
-      const intervalEnd = intervalStart + cardsForPage
-
+    if ((basicList.length > 0) && (basicList.length > pokemonsShowing.length) && (pokemonsShowing.length < intervalEnd)) {
       const pokemonsOfPage = basicList.slice(intervalStart, intervalEnd)
 
       fetchPokemonsDetails(pokemonsOfPage).then(pokemons => {
         dispatch(addMore(pokemons))
       })
     }
-  }, [dispatch, basicList, page])
+  }, [dispatch, basicList, page, pokemonsShowing] )
 
   function changeExpression(e) {
     dispatch(setExpression(e.target.value))
@@ -70,13 +63,13 @@ function PokemonsIndex() {
           <div className='row'>
             <div className='col-36'>
               <div className={'row row-cols-1 row-cols-md-4'} >
-                {pokemonsShowing && pokemonsShowing.map((pokemon) => (
+                {pokemonsShowing && pokemonsShowing.filter(pokemon => pokemon.visible === true).map((pokemon) =>  (
                   <Card key={pokemon.id} pokemon={pokemon} />
                 ))}
               </div>
             </div>
           </div>
-          {expression === '' && (
+          {expression === '' && (basicList.length > pokemonsShowing.length) && (
             <div className='row'>
               <div className='col text-center mt-3'>
                 <button type='button' className='btn btn-outline-primary d-print-none' onClick={() => dispatch(setPage(page + 1))}>

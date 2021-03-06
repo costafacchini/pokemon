@@ -1,4 +1,4 @@
-import request from '../../../../../services/request'
+import request from '../../../services/request'
 
 async function fetchBasicList() {
   try {
@@ -44,8 +44,11 @@ async function fetchPokemonsDetails(pokemonsOfPage) {
             images: {
               original: pokemonInfo.sprites.other["official-artwork"]["front_default"],
               alternative: pokemonInfo.sprites.other["dream_world"]["front_default"]
-            }
+            },
+            visible: true
           })
+        } else {
+          pokemons.push({ ...pokemon, visible: false })
         }
       }
     })
@@ -59,9 +62,7 @@ async function fetchPokemonsDetails(pokemonsOfPage) {
 }
 
 async function fetchPokemonInfo(url) {
-  const pokemonInfo = await request(url)
-
-  return pokemonInfo
+  return await request(url)
 }
 
 export { fetchBasicList, fetchPokemonsDetails }

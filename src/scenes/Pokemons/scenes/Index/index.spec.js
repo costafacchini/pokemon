@@ -9,17 +9,6 @@ describe('<PokemonsIndex />', () => {
   let store
 
   function mount() {
-    fetchMock.get('https://pokeapi.co/api/v2/pokemon/?offset=0&limit=1', { count: 3 })
-    fetchMock.get('https://pokeapi.co/api/v2/pokemon/?offset=0&limit=3',
-      {
-        count: 543,
-        results: [
-          { name: 'ivysaur', url: 'https://pokeapi.co/api/v2/pokemon/2/' },
-          { name: 'pikachu', url: 'https://pokeapi.co/api/v2/pokemon/3/' },
-          { name: 'bulbasaur', url: 'https://pokeapi.co/api/v2/pokemon/1/' }
-        ]
-      }
-    )
     fetchMock.get('https://pokeapi.co/api/v2/pokemon/1/', {
       abilities: [ { ability: { name: 'synchronize' } }, { ability: { name: 'magic-guard' } } ],
       types: [ { type: { name: 'grass' } }, { type: { name: 'poison' } } ],
@@ -58,27 +47,15 @@ describe('<PokemonsIndex />', () => {
         }
       }
     })
-    fetchMock.get('https://pokeapi.co/api/v2/pokemon/3/', {
-      abilities: [ { ability: { name: 'magic-guard' } }, { ability: { name: 'super-luck' } } ],
-      types: [ { type: { name: 'poison' } } ],
-      order: 3,
-      name: 'pikachu',
-      id: 3,
-      height: 79,
-      weight: 90,
-      sprites: {
-        other: {
-          'official-artwork': {
-            'front_default': 'url_image_1'
-          },
-          "dream_world": {
-            "front_default": 'url_image_2'
-          }
-        }
-      }
-    })
+    fetchMock.get('https://pokeapi.co/api/v2/pokemon/3/', { status: 404, body: 'Not Found' })
 
     store = createStore()
+    store.getState().pokemon.basicList = [
+      { name: 'bulbasaur', url: 'https://pokeapi.co/api/v2/pokemon/1/' },
+      { name: 'ivysaur', url: 'https://pokeapi.co/api/v2/pokemon/2/' },
+      { name: 'pikachu', url: 'https://pokeapi.co/api/v2/pokemon/3/' }
+    ]
+
     return mountWithRedux(store)(<PokemonsIndex />)
   }
 
@@ -99,7 +76,7 @@ describe('<PokemonsIndex />', () => {
     expect(screen.getByRole('button', { name: 'Buscar' })).toBeInTheDocument()
   })
 
-  it('shows the pokeomn cards', async () => {
+  it('shows the pokeomn cards visibles', async () => {
     await act(async () => {
       mount()
 
@@ -108,6 +85,7 @@ describe('<PokemonsIndex />', () => {
 
     expect(screen.getByText('bulbasaur')).toBeInTheDocument()
     expect(screen.getByText('ivysaur')).toBeInTheDocument()
+    expect(screen.queryByText('pikachu')).not.toBeInTheDocument()
   })
 
   describe('about the expression', () => {

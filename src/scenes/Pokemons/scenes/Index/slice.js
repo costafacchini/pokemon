@@ -12,9 +12,8 @@ function normalizeValue(value) {
 }
 
 export const slice = createSlice({
-  name: 'pokemon',
+  name: 'pokemonIndex',
   initialState: {
-    basicList: [],
     pokemonsLoaded: [],
     pokemonsShowing: [],
     expression: '',
@@ -22,14 +21,10 @@ export const slice = createSlice({
   },
   reducers: {
     reset: (state) => {
-      state.basicList = []
       state.pokemonsLoaded = []
       state.pokemonsShowing = []
       state.expression = ''
       state.page = 1
-    },
-    loadBasicList: (state, action) => {
-      state.basicList = action.payload
     },
     addMore: (state, action) => {
       state.pokemonsLoaded = [ ...state.pokemonsLoaded, ...action.payload ]
@@ -54,6 +49,6 @@ export const slice = createSlice({
   }
 })
 
-export const { loadBasicList, addMore, filter, setExpression, setPage, reset } = slice.actions
+export const { addMore, filter, setExpression, setPage, reset } = slice.actions
 
 export default slice.reducer

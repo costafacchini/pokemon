@@ -111,7 +111,8 @@ describe('pokemons', () => {
             images: {
               original: 'url_image_1',
               alternative: 'url_image_2'
-            }
+            },
+            visible: true
           },
           {
             abilities: [ 'inner-focus', 'justified' ],
@@ -125,7 +126,8 @@ describe('pokemons', () => {
             images: {
               original: 'url_image_1',
               alternative: 'url_image_2'
-            }
+            },
+            visible: true
           },
           {
             abilities: [ 'magic-guard', 'super-luck' ],
@@ -139,13 +141,14 @@ describe('pokemons', () => {
             images: {
               original: 'url_image_1',
               alternative: 'url_image_2'
-            }
+            },
+            visible: true
           }
         ])
       })
     })
 
-    it('returns ignores the pokemon if request return "Nof Found"', () => {
+    it('returns the pokemons data with pokemon that data "Nof Found" invisible', () => {
       const pokemonList = [
         { name: 'bulbasaur', url: 'https://pokeapi.co/api/v2/pokemon/1/' },
         { name: 'pikachu', url: 'https://pokeapi.co/api/v2/pokemon/3/' }
@@ -186,7 +189,13 @@ describe('pokemons', () => {
             images: {
               original: 'url_image_1',
               alternative: 'url_image_2'
-            }
+            },
+            visible: true
+          },
+          {
+            name: 'pikachu',
+            url: 'https://pokeapi.co/api/v2/pokemon/3/',
+            visible: false
           }
         ])
       })
