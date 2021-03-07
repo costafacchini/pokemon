@@ -33,8 +33,8 @@ async function fetchPokemonsDetails(pokemonsOfPage) {
 
         if (pokemonInfo !== 'Not Found') {
           pokemons.push({
-            abilities: pokemonInfo.abilities.map(hability => hability.ability.name),
-            types: pokemonInfo.types.map(type => type.type.name),
+            abilities: pokemonInfo.abilities?.map(hability => hability.ability.name),
+            types: pokemonInfo.types?.map(type => type.type.name),
             height: pokemonInfo.height,
             weight: pokemonInfo.weight,
             number: pokemonInfo.order,
@@ -45,6 +45,9 @@ async function fetchPokemonsDetails(pokemonsOfPage) {
               original: pokemonInfo.sprites.other["official-artwork"]["front_default"],
               alternative: pokemonInfo.sprites.other["dream_world"]["front_default"]
             },
+            stats: pokemonInfo.stats?.map(stat => {
+              return { name: stat.stat.name, value: stat["base_stat"] }
+            }),
             visible: true
           })
         } else {

@@ -1,0 +1,32 @@
+.row-info {
+    border-bottom: 1px solid #ddd;
+    padding: 1.200rem 0;
+}
+
+.row-graph {
+    padding: 1.200rem 0;
+}
+
+.title-info {
+    font-size: 12px;
+    font-weight: 700;
+    display: block;
+    margin-bottom: .75rem;
+}
+
+.value-info {
+    font-size: 1.5rem;
+    line-height: 1.625rem;
+}
+
+.hability-info {
+    margin-right: 0.25rem;
+    background-color: #28a745;
+    color: #fff;
+}
+
+.type-info {
+    margin-right: 0.25rem;
+    background-color: #17a2b8;
+    color: #fff;
+}

@@ -56,7 +56,27 @@ describe('pokemons', () => {
               "front_default": 'url_image_2'
             }
           }
-        }
+        },
+        stats: [
+          {
+            'base_stat': 60,
+            stat: {
+              name: 'hp'
+            }
+          },
+          {
+            'base_stat': 20,
+            stat: {
+              name: 'attack'
+            }
+          },
+          {
+            'base_stat': 28,
+            stat: {
+              name: 'defense'
+            }
+          }
+        ]
       })
       fetchMock.get('https://pokeapi.co/api/v2/pokemon/2/', {
         abilities: [ { ability: { name: 'inner-focus' } }, { ability: { name: 'justified' } } ],
@@ -75,7 +95,27 @@ describe('pokemons', () => {
               "front_default": 'url_image_2'
             }
           }
-        }
+        },
+        stats: [
+          {
+            'base_stat': 20,
+            stat: {
+              name: 'hp'
+            }
+          },
+          {
+            'base_stat': 78,
+            stat: {
+              name: 'attack'
+            }
+          },
+          {
+            'base_stat': 56,
+            stat: {
+              name: 'defense'
+            }
+          }
+        ]
       })
       fetchMock.get('https://pokeapi.co/api/v2/pokemon/3/', {
         abilities: [ { ability: { name: 'magic-guard' } }, { ability: { name: 'super-luck' } } ],
@@ -94,7 +134,27 @@ describe('pokemons', () => {
               "front_default": 'url_image_2'
             }
           }
-        }
+        },
+        stats: [
+          {
+            'base_stat': 90,
+            stat: {
+              name: 'hp'
+            }
+          },
+          {
+            'base_stat': 50,
+            stat: {
+              name: 'attack'
+            }
+          },
+          {
+            'base_stat': 88,
+            stat: {
+              name: 'defense'
+            }
+          }
+        ]
       })
 
       fetchPokemonsDetails(pokemonList).then(pokemonsData => {
@@ -112,6 +172,20 @@ describe('pokemons', () => {
               original: 'url_image_1',
               alternative: 'url_image_2'
             },
+            stats: [
+              {
+                name: 'hp',
+                value: 60
+              },
+              {
+                name: 'attack',
+                value: 20
+              },
+              {
+                name: 'defense',
+                value: 28
+              }
+            ],
             visible: true
           },
           {
@@ -127,6 +201,20 @@ describe('pokemons', () => {
               original: 'url_image_1',
               alternative: 'url_image_2'
             },
+            stats: [
+              {
+                name: 'hp',
+                value: 20
+              },
+              {
+                name: 'attack',
+                value: 78
+              },
+              {
+                name: 'defense',
+                value: 56
+              }
+            ],
             visible: true
           },
           {
@@ -142,6 +230,20 @@ describe('pokemons', () => {
               original: 'url_image_1',
               alternative: 'url_image_2'
             },
+            stats: [
+              {
+                name: 'hp',
+                value: 90
+              },
+              {
+                name: 'attack',
+                value: 50
+              },
+              {
+                name: 'defense',
+                value: 88
+              }
+            ],
             visible: true
           }
         ])
