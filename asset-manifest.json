@@ -1,0 +1,25 @@
+{
+  "files": {
+    "main.css": "/pokemon/static/css/main.6ab4df53.chunk.css",
+    "main.js": "/pokemon/static/js/main.531df4eb.chunk.js",
+    "main.js.map": "/pokemon/static/js/main.531df4eb.chunk.js.map",
+    "runtime-main.js": "/pokemon/static/js/runtime-main.32e0f69c.js",
+    "runtime-main.js.map": "/pokemon/static/js/runtime-main.32e0f69c.js.map",
+    "static/css/2.658248ec.chunk.css": "/pokemon/static/css/2.658248ec.chunk.css",
+    "static/js/2.d39295a8.chunk.js": "/pokemon/static/js/2.d39295a8.chunk.js",
+    "static/js/2.d39295a8.chunk.js.map": "/pokemon/static/js/2.d39295a8.chunk.js.map",
+    "static/js/3.476bdf10.chunk.js": "/pokemon/static/js/3.476bdf10.chunk.js",
+    "static/js/3.476bdf10.chunk.js.map": "/pokemon/static/js/3.476bdf10.chunk.js.map",
+    "index.html": "/pokemon/index.html",
+    "static/css/2.658248ec.chunk.css.map": "/pokemon/static/css/2.658248ec.chunk.css.map",
+    "static/css/main.6ab4df53.chunk.css.map": "/pokemon/static/css/main.6ab4df53.chunk.css.map",
+    "static/js/2.d39295a8.chunk.js.LICENSE.txt": "/pokemon/static/js/2.d39295a8.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.32e0f69c.js",
+    "static/css/2.658248ec.chunk.css",
+    "static/js/2.d39295a8.chunk.js",
+    "static/css/main.6ab4df53.chunk.css",
+    "static/js/main.531df4eb.chunk.js"
+  ]
+}
