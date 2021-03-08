@@ -1,6 +1,6 @@
 import React from 'react'
 import Chart from 'react-google-charts'
-import styles from "../../style.css";
+import styles from '../../style.css'
 
 export default function Stats({ stats }) {
   function getChartData(stats) {
