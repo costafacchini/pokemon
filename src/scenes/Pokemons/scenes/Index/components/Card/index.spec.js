@@ -16,6 +16,6 @@ describe('<Card />', () => {
     expect(screen.getByText('Adaptability')).toBeInTheDocument()
     expect(screen.getByText('Aerilate')).toBeInTheDocument()
     expect(screen.getByRole('img')).toHaveAttribute('src', 'http://img.com')
-    expect(screen.getByRole('link')).toHaveAttribute('href', '/pokemon/charmander')
+    expect(screen.getByRole('link')).toHaveAttribute('href', '#/pokemon/charmander')
   })
 })
