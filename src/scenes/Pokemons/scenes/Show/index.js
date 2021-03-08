@@ -18,10 +18,8 @@ function isEmpty(obj) {
   return JSON.stringify(obj) === JSON.stringify({});
 }
 
-export default function PokemonShow() {
+export default function PokemonShow({ basicList, pokemonsShowing }) {
   const dispatch = useDispatch()
-  const basicList = useSelector(state => state.pokemon.basicList)
-  const pokemonsShowing = useSelector(state => state.pokemonIndex.pokemonsShowing)
   const pokemonData = useSelector(state => state.pokemonShow.pokemonData)
 
   let { pokemonId } = useParams()
@@ -47,7 +45,7 @@ export default function PokemonShow() {
   return (
     <>
       {isEmpty(pokemonData) && (
-        <h3>Pokemon: {pokemonId} não encontrado</h3>
+        <h3>{pokemonId} não encontrado</h3>
       )}
       {!isEmpty(pokemonData) && (
         <div className='container'>

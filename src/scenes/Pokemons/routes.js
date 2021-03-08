@@ -22,10 +22,10 @@ export default function PokemonsRoutes() {
     <HashRouter>
       <Switch>
         <Route path="/pokemon">
-          <PokemonRoute />
+          <PokemonRoute basicList={basicList} />
         </Route>
         <Route path="/">
-          <PokemonsIndex />
+          <PokemonsIndex basicList={basicList} />
         </Route>
       </Switch>
     </HashRouter>

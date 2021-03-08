@@ -1,45 +1,57 @@
-import store from '../../../../app/store'
-import { reset, addMore, filter, setExpression, setPage } from './slice'
+import { addMore, filter, setExpression, setPage } from './slice'
+import { createStore } from '../../../../../.jest/redux-testing'
 
-describe('slice', () => {
+describe('pokemonIndexSlice', () => {
+  let store = createStore()
+
   beforeEach(() => {
-    store.dispatch(reset())
+    store = createStore()
   })
 
   describe('#addMore', () => {
-    it('adds the new pokemons on list that is visible to user', () => {
+    it('adds the new pokemons on list that is visible to user and list of pokemons loaded', () => {
       expect(store.getState().pokemonIndex.pokemonsShowing).toEqual([])
 
-      store.dispatch(addMore([ 'charmander', 'bulbasaur' ]))
-      expect(store.getState().pokemonIndex.pokemonsLoaded).toEqual([ 'charmander', 'bulbasaur' ])
-      expect(store.getState().pokemonIndex.pokemonsShowing).toEqual([ 'charmander', 'bulbasaur' ])
+      store.dispatch(addMore([{ name: 'charmander' }, { name: 'bulbasaur'}]))
+      expect(store.getState().pokemonIndex.pokemonsLoaded).toEqual([{ name: 'charmander' }, { name: 'bulbasaur' }])
+      expect(store.getState().pokemonIndex.pokemonsShowing).toEqual([{ name: 'charmander' }, { name: 'bulbasaur' }])
 
-      store.dispatch(addMore([ 'pikachu' ]))
-      expect(store.getState().pokemonIndex.pokemonsLoaded).toEqual([ 'charmander', 'bulbasaur', 'pikachu' ])
-      expect(store.getState().pokemonIndex.pokemonsShowing).toEqual([ 'charmander', 'bulbasaur', 'pikachu' ])
+      store.dispatch(addMore([{ name: 'pikachu' }]))
+      expect(store.getState().pokemonIndex.pokemonsLoaded).toEqual([{ name: 'charmander' }, { name: 'bulbasaur' }, { name: 'pikachu' }])
+      expect(store.getState().pokemonIndex.pokemonsShowing).toEqual([{ name: 'charmander' }, { name: 'bulbasaur' }, { name: 'pikachu' }])
+    })
+
+    it('does not add the new pokemons on list of pokemons loaded if filtered', () => {
+      expect(store.getState().pokemonIndex.pokemonsShowing).toEqual([])
+
+      store.dispatch(addMore([{ name: 'charmander' }, { name: 'bulbasaur'}]))
+      expect(store.getState().pokemonIndex.pokemonsShowing).toEqual([{ name: 'charmander' }, { name: 'bulbasaur' }])
+      expect(store.getState().pokemonIndex.pokemonsLoaded).toEqual([{ name: 'charmander' }, { name: 'bulbasaur' }])
+
+      store.dispatch(filter({ expression: 'bul', basicList: [{ name: 'charmander' }, { name: 'bulbasaur' }] }))
+      store.dispatch(addMore([{ name: 'pikachu' }]))
+      expect(store.getState().pokemonIndex.pokemonsShowing).toEqual([{ name: 'pikachu' }])
+      expect(store.getState().pokemonIndex.pokemonsLoaded).toEqual([{ name: 'charmander' }, { name: 'bulbasaur' }])
     })
   })
 
   describe('#filter', () => {
     it('filters the pokemons by name with the expression informed by user ignoring case', () => {
-      store.dispatch(addMore([
-        { name: 'pikachu' },
-        { name: 'charmander' },
-        { name: 'bulbasaur' }
-      ]))
+      store.dispatch(addMore([{ name: 'pikachu' }, { name: 'charmander' }, { name: 'bulbasaur'}]))
+      store.dispatch(filter({ expression: 'pi', basicList: [{ name: 'pikachu' }, { name: 'charmander' }, { name: 'bulbasaur' }] }))
+      expect(store.getState().pokemonIndex.pokemonsFiltered).toEqual([{ name: 'pikachu' }])
+      expect(store.getState().pokemonIndex.pokemonsShowing).toEqual([])
+      expect(store.getState().pokemonIndex.filtered).toEqual(true)
 
-      store.dispatch(filter('pi'))
-      expect(store.getState().pokemonIndex.pokemonsShowing).toEqual([{ name: 'pikachu' }])
+      store.dispatch(filter({ expression: 'PI', basicList: [{ name: 'pikachu' }, { name: 'charmander' }, { name: 'bulbasaur' }] }))
+      expect(store.getState().pokemonIndex.pokemonsFiltered).toEqual([{ name: 'pikachu' }])
+      expect(store.getState().pokemonIndex.pokemonsShowing).toEqual([])
+      expect(store.getState().pokemonIndex.filtered).toEqual(true)
 
-      store.dispatch(filter('PI'))
-      expect(store.getState().pokemonIndex.pokemonsShowing).toEqual([{ name: 'pikachu' }])
-
-      store.dispatch(filter(''))
-      expect(store.getState().pokemonIndex.pokemonsShowing).toEqual([
-        { name: 'pikachu' },
-        { name: 'charmander' },
-        { name: 'bulbasaur' }
-      ])
+      store.dispatch(filter({ expression: '', basicList: [{ name: 'pikachu' }, { name: 'charmander' }, { name: 'bulbasaur' }] }))
+      expect(store.getState().pokemonIndex.pokemonsFiltered).toEqual([])
+      expect(store.getState().pokemonIndex.pokemonsShowing).toEqual([{ name: 'pikachu' }, { name: 'charmander' }, { name: 'bulbasaur'}])
+      expect(store.getState().pokemonIndex.filtered).toEqual(false)
     })
   })
 

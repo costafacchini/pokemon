@@ -1,7 +1,7 @@
 import fetchMock from 'fetch-mock'
 import { fetchBasicList, fetchPokemonsDetails } from './pokemon'
 
-describe('pokemons', () => {
+describe('pokemons service', () => {
   beforeEach(() => {
     fetchMock.reset()
     expect(fetchMock.done()).toBe(true)

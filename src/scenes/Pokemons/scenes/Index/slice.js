@@ -11,36 +11,37 @@ function normalizeValue(value) {
   return value.toString().toUpperCase()
 }
 
-export const slice = createSlice({
+export const pokemonIndexSlice = createSlice({
   name: 'pokemonIndex',
   initialState: {
     pokemonsLoaded: [],
     pokemonsShowing: [],
+    pokemonsFiltered: [],
     expression: '',
-    page: 1
+    page: 1,
+    filtered: false
   },
   reducers: {
-    reset: (state) => {
-      state.pokemonsLoaded = []
-      state.pokemonsShowing = []
-      state.expression = ''
-      state.page = 1
-    },
     addMore: (state, action) => {
-      state.pokemonsLoaded = [ ...state.pokemonsLoaded, ...action.payload ]
       state.pokemonsShowing = [ ...state.pokemonsShowing, ...action.payload]
+      if (!state.filtered) {
+        state.pokemonsLoaded = [ ...state.pokemonsLoaded, ...action.payload]
+      }
     },
     setExpression: (state, action) => {
       state.expression = action.payload
     },
     filter: (state, action) => {
-      const expression = action.payload
+      const { expression, basicList } = action.payload
 
       if (expression === '') {
         state.pokemonsShowing = state.pokemonsLoaded
-        state.page = 1
+        state.pokemonsFiltered = []
+        state.filtered = false
       } else {
-        state.pokemonsShowing = state.pokemonsLoaded.filter(pokemon => contains(pokemon, expression))
+        state.pokemonsShowing = []
+        state.pokemonsFiltered = basicList.filter(pokemon => contains(pokemon, expression))
+        state.filtered = true
       }
     },
     setPage: (state, action) => {
@@ -49,6 +50,6 @@ export const slice = createSlice({
   }
 })
 
-export const { addMore, filter, setExpression, setPage, reset } = slice.actions
+export const { addMore, filter, setExpression, setPage, reset } = pokemonIndexSlice.actions
 
-export default slice.reducer
+export default pokemonIndexSlice.reducer

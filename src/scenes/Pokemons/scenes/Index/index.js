@@ -4,27 +4,36 @@ import { useSelector, useDispatch } from 'react-redux'
 import { fetchPokemonsDetails } from '../../services/pokemon'
 import { addMore, filter, setExpression, setPage } from './slice'
 
-function PokemonsIndex() {
+export default function PokemonsIndex({ basicList }) {
   const dispatch = useDispatch()
-  const basicList = useSelector(state => state.pokemon.basicList)
   const pokemonsShowing = useSelector(state => state.pokemonIndex.pokemonsShowing)
+  const pokemonsFiltered = useSelector(state => state.pokemonIndex.pokemonsFiltered)
   const expression = useSelector(state => state.pokemonIndex.expression)
   const page = useSelector(state => state.pokemonIndex.page)
+  const filtered = useSelector(state => state.pokemonIndex.filtered)
 
   const cardsForPage = 40
 
   useEffect(() => {
-    const intervalEnd = page * cardsForPage
-    const intervalStart = intervalEnd - cardsForPage
+    if (basicList.length > 0) {
+      const intervalEnd = page * cardsForPage
+      const intervalStart = intervalEnd - cardsForPage
 
-    if ((basicList.length > 0) && (basicList.length > pokemonsShowing.length) && (pokemonsShowing.length < intervalEnd)) {
-      const pokemonsOfPage = basicList.slice(intervalStart, intervalEnd)
+      if ((!filtered) && (basicList.length > pokemonsShowing.length) && (pokemonsShowing.length < intervalEnd)) {
+        const pokemonsOfPage = basicList.slice(intervalStart, intervalEnd)
 
-      fetchPokemonsDetails(pokemonsOfPage).then(pokemons => {
-        dispatch(addMore(pokemons))
-      })
+        fetchPokemonsDetails(pokemonsOfPage).then(pokemons => {
+          dispatch(addMore(pokemons))
+        })
+      }
+
+      if (filtered && pokemonsShowing.length === 0) {
+        fetchPokemonsDetails(pokemonsFiltered).then(pokemons => {
+          dispatch(addMore(pokemons))
+        })
+      }
     }
-  }, [dispatch, basicList, page, pokemonsShowing] )
+  }, [dispatch, basicList, page, pokemonsShowing, expression, filtered, pokemonsFiltered] )
 
   function changeExpression(e) {
     dispatch(setExpression(e.target.value))
@@ -34,7 +43,7 @@ function PokemonsIndex() {
     <>
       <div className='container'>
         <div className='row'>
-          <div className='col-6'>
+          <div className='col-4 pl-0'>
             <input
               className='form-control'
               name='expression'
@@ -49,7 +58,7 @@ function PokemonsIndex() {
               type='button'
               className='btn btn-primary'
               onClick={() => {
-                dispatch(filter(expression))
+                dispatch(filter({ expression: expression, basicList: basicList }))
               }}
             >
               Buscar
@@ -83,5 +92,3 @@ function PokemonsIndex() {
     </>
   )
 }
-
-export default PokemonsIndex
